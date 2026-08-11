@@ -24,6 +24,7 @@ export async function getTopTracks(limit = 10) {
     SELECT ID, artist, title, image, count_played
     FROM songs
     WHERE enabled = 1
+    AND id_subcat IN (30, 35, 38, 39, 40)
     ORDER BY count_played DESC
     LIMIT ?
   `, [limit]);
@@ -35,7 +36,7 @@ export async function searchSongs(searchQuery) {
     SELECT ID, artist, title, image
     FROM songs
     WHERE enabled   = 1
-      AND id_subcat = 0
+      AND id_subcat IN (30, 35, 38, 39, 40)
       AND (artist LIKE ? OR title LIKE ?)
     ORDER BY artist ASC, title ASC
     LIMIT 10

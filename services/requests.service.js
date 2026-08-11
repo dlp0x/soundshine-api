@@ -74,8 +74,8 @@ export async function addRequest(songID, username) {
   }
 
   await query(`
-    INSERT INTO requests (songID, username, requested, PLAYED)
-    VALUES (?, ?, NOW(), 0)
+    INSERT INTO requests (songID, username, requested, PLAYED, userIP)
+    VALUES (?, ?, NOW(), 0, '1.2.3.4')
   `, [songID, username]);
 
   return { success: true, song };
