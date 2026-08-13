@@ -1,0 +1,20 @@
+name: Sync Labels
+
+on:
+  push:
+    paths:
+      - '.github/labels.json'
+  workflow_dispatch: # Permet de lancer l'action manuellement d'un simple clic
+
+jobs:
+  labels:
+    name: Update Labels
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Label Manager
+        uses: lannonbr/issue-label-manager-action@v4.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
