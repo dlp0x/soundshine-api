@@ -3,31 +3,33 @@ import { query } from '../db/pool.js';
 export async function getEvents(catID) {
   return query(`
     SELECT
-      e.id,
+      e.ID   AS id,
       e.name,
-      e.image,
-      e.tags,
-      e.scheduleDay  AS day,
-      e.scheduleTime AS time
-    FROM events_info e
-    INNER JOIN subcategory_info s ON e.id_subcat = s.id
-    WHERE s.parentID = ?
-    ORDER BY e.scheduleDay ASC, e.scheduleTime ASC
+      e.day,
+      e.time,
+      ei.image,
+      ei.tags
+    FROM events e
+    INNER JOIN z__events_info ei ON ei.event_id = e.ID
+    WHERE e.catID   = ?
+      AND e.is_fake = 0
+    ORDER BY e.date ASC, e.time ASC
   `, [catID]);
 }
 
 export async function getSchedule(day, catID) {
   return query(`
     SELECT
-      e.id,
+      e.ID   AS id,
       e.name,
-      e.image,
-      e.tags,
-      e.scheduleTime AS time
-    FROM events_info e
-    INNER JOIN subcategory_info s ON e.id_subcat = s.id
-    WHERE e.scheduleDay = ?
-      AND s.parentID   = ?
-    ORDER BY e.scheduleTime ASC
+      e.time,
+      ei.image,
+      ei.tags
+    FROM events e
+    INNER JOIN z__events_info ei ON ei.event_id = e.ID
+    WHERE e.day     = ?
+      AND e.catID   = ?
+      AND e.is_fake = 0
+    ORDER BY e.time ASC
   `, [day, catID]);
 }

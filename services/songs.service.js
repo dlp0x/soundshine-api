@@ -1,10 +1,13 @@
 import { query } from '../db/pool.js';
 
+// `history` has no `image` column (only `songs` does) — join back via
+// trackID to recover cover art, same issue as shows.service.js episodes.
 export async function getNowPlaying() {
   const rows = await query(`
-    SELECT artist, title, image, date_played
-    FROM history
-    ORDER BY date_played DESC
+    SELECT h.artist, h.title, sg.image, h.date_played
+    FROM history h
+    LEFT JOIN songs sg ON sg.ID = h.trackID
+    ORDER BY h.date_played DESC
     LIMIT 1
   `);
   return rows[0] || null;
@@ -12,9 +15,10 @@ export async function getNowPlaying() {
 
 export async function getHistory(limit = 10) {
   return query(`
-    SELECT artist, title, image, date_played
-    FROM history
-    ORDER BY date_played DESC
+    SELECT h.artist, h.title, sg.image, h.date_played
+    FROM history h
+    LEFT JOIN songs sg ON sg.ID = h.trackID
+    ORDER BY h.date_played DESC
     LIMIT ?
   `, [limit]);
 }
