@@ -1,7 +1,7 @@
 {
-  "name": "radiodj-api",
+  "name": "soundshine-api",
   "version": "2.0.0",
-  "description": "RadioDJ API",
+  "description": "soundshine Local API",
   "main": "server.js",
   "type": "module",
   "scripts": {
