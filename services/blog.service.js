@@ -13,8 +13,8 @@ export async function getPosts(limit = 10) {
       p.is_featured,
       u.nice_nickname,
       u.avatar
-    FROM z_posts p
-    LEFT JOIN z_users u ON p.posted_by = u.id
+    FROM z__posts p
+    LEFT JOIN z__users u ON p.posted_by = u.id
     WHERE p.is_fake = 0
     ORDER BY p.date_posted DESC
     LIMIT ?
@@ -37,8 +37,8 @@ export async function getPostBySlug(slug) {
       u.avatar,
       u.bio,
       u.job_title
-    FROM z_posts p
-    LEFT JOIN z_users u ON p.posted_by = u.id
+    FROM z__posts p
+    LEFT JOIN z__users u ON p.posted_by = u.id
     WHERE p.slug   = ?
       AND p.is_fake = 0
     LIMIT 1

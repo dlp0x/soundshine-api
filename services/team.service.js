@@ -26,7 +26,7 @@ const PUBLIC_FIELDS = `
 export async function getTeam() {
   return query(`
     SELECT ${PUBLIC_FIELDS}
-    FROM z_users
+    FROM z__users
     WHERE is_fake = 0
     ORDER BY id ASC
   `);
@@ -35,7 +35,7 @@ export async function getTeam() {
 export async function getMemberById(id) {
   const rows = await query(`
     SELECT ${PUBLIC_FIELDS}
-    FROM z_users
+    FROM z__users
     WHERE id      = ?
       AND is_fake = 0
     LIMIT 1
@@ -46,7 +46,7 @@ export async function getMemberById(id) {
 
   const posts = await query(`
     SELECT id, title, slug, featured_image, date_posted
-    FROM z_posts
+    FROM z__posts
     WHERE posted_by = ?
       AND is_fake   = 0
     ORDER BY date_posted DESC
