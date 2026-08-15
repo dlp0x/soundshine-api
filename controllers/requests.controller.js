@@ -37,16 +37,21 @@ export async function add(req, res) {
     return res.status(400).json({ error: 'songID and username are required' });
   }
 
-  console.log(`[ADD] songID=${songID} by "${username}"`);
-  const result = await addRequest(parseInt(songID), String(username));
+  const parsedSongID = parseInt(songID);
+  if (!Number.isInteger(parsedSongID)) {
+    return res.status(400).json({ error: 'songID must be a valid integer' });
+  }
+
+  console.log(`[ADD] songID=${parsedSongID} by "${username}"`);
+  const result = await addRequest(parsedSongID, String(username));
 
   if (result.reason === 'not_found') {
-    console.log(`[ADD] Not found: songID=${songID}`);
+    console.log(`[ADD] Not found: songID=${parsedSongID}`);
     return res.status(404).json({ error: 'Song not found' });
   }
 
   if (result.reason === 'already_requested') {
-    console.log(`[ADD] Duplicate: songID=${songID} by "${username}"`);
+    console.log(`[ADD] Duplicate: songID=${parsedSongID} by "${username}"`);
     return res.status(409).json({ error: 'Already requested in the last cooldown period' });
   }
 
