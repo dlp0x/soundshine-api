@@ -12,6 +12,11 @@ export async function schedule(req, res) {
   const { day, catID } = req.query;
   if (!day || !catID) return res.status(400).json({ error: 'day and catID are required' });
 
-  const data = await getSchedule(day, parseInt(catID));
+  const parsedCatID = parseInt(catID);
+  if (!Number.isInteger(parsedCatID)) {
+    return res.status(400).json({ error: 'catID must be a valid integer' });
+  }
+
+  const data = await getSchedule(day, parsedCatID);
   res.json({ schedule: data });
 }

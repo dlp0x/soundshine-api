@@ -32,7 +32,13 @@ app.use((req, res) => {
 
 // Erreurs non catchées
 app.use((err, req, res, next) => {
-  console.error('[ERROR]', err.message);
+  console.error('[ERROR]', req.method, req.originalUrl);
+  console.error('[ERROR] message:', err.message);
+  if (err.code)       console.error('[ERROR] code:', err.code);
+  if (err.errno)      console.error('[ERROR] errno:', err.errno);
+  if (err.sqlState)   console.error('[ERROR] sqlState:', err.sqlState);
+  if (err.sqlMessage) console.error('[ERROR] sqlMessage:', err.sqlMessage);
+  if (err.sql)        console.error('[ERROR] sql:', err.sql);
   res.status(500).json({ error: 'Internal server error' });
 });
 

@@ -14,24 +14,32 @@ export async function getNowPlaying() {
 }
 
 export async function getHistory(limit = 10) {
+  // See blog.service.js getPosts() for why LIMIT is inlined rather than
+  // bound: mysql2's prepared statements (pool.execute()) throw
+  // "Incorrect arguments to mysqld_stmt_execute" for a bound LIMIT
+  // against this MySQL 8.4 server.
+  const safeLimit = Math.max(0, Math.min(Number.parseInt(limit, 10) || 10, 50));
+
   return query(`
     SELECT h.artist, h.title, sg.image, h.date_played
     FROM history h
     LEFT JOIN songs sg ON sg.ID = h.trackID
     ORDER BY h.date_played DESC
-    LIMIT ?
-  `, [limit]);
+    LIMIT ${safeLimit}
+  `);
 }
 
 export async function getTopTracks(limit = 10) {
+  const safeLimit = Math.max(0, Math.min(Number.parseInt(limit, 10) || 10, 50));
+
   return query(`
     SELECT ID, artist, title, image, count_played
     FROM songs
     WHERE enabled = 1
     AND id_subcat IN (30, 35, 38, 39, 40)
     ORDER BY count_played DESC
-    LIMIT ?
-  `, [limit]);
+    LIMIT ${safeLimit}
+  `);
 }
 
 export async function searchSongs(searchQuery) {
